@@ -1,5 +1,5 @@
 import state from './state'
-import createActions from 'actions/automatic.js';
+import createActions from './actions/automatic.js';
 
 const nap = (model, firebaseUrl) => {
 
