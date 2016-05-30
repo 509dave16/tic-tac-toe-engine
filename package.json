@@ -1,6 +1,6 @@
 {
   "name": "tic-tac-toe-engine",
-  "version": "1.0.1-beta",
+  "version": "1.0.4-beta",
   "description": "Business logic of a Tic Tac Toe game.",
   "main": "dist/index.js",
   "scripts": {
@@ -58,8 +58,7 @@
   },
   "babel": {
     "presets": [
-      "es2015",
-      "stage-2"
+      "es2015"
     ]
   },
   "dependencies": {

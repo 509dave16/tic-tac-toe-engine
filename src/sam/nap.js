@@ -1,9 +1,8 @@
 import state from './state'
-import createActions from './actions/automatic.js';
+import napActions from './actions/automatic.js';
 
-const nap = (model, firebaseUrl) => {
+const nap = (model) => {
 
-  const napActions = createActions(firebaseUrl);
   const controlStateToActions = {
     initialize: napActions.initializeGridAction,
     startLocalGame: napActions.startLocalGameAction,

@@ -3,11 +3,11 @@ import  reducers  from './reducers.js'
 import present from './present.js'
 import nap from '../nap.js'
 
-const createModel = (firebaseUrl, enhancer) => {
+const createModel = (enhancer) => {
   const store = createStore(reducers, undefined, enhancer);
   const mergeStateToPresent = dataset => {
     present(dataset, store.getState())(store.dispatch);
-    nap(store.getState(), firebaseUrl)(mergeStateToPresent);
+    nap(store.getState())(mergeStateToPresent);
   };
 
   mergeStateToPresent({type:'FIRST_DISPATCH'});
