@@ -1,8 +1,8 @@
 import createModel from './sam/model/model.js';
 import createActions from './sam/actions/view.js';
 
-const init = (firebaseUrl, reduxEnhancer) => {
-    const model = createModel(firebaseUrl, reduxEnhancer);
+const createEngine = (reduxEnhancer) => {
+    const model = createModel(reduxEnhancer);
     const actions = createActions(model.present);
     return {
       store: model.store,
@@ -10,4 +10,4 @@ const init = (firebaseUrl, reduxEnhancer) => {
     };
 };
 
-export default init;
+export default createEngine;

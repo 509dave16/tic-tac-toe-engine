@@ -25,6 +25,7 @@ const nap = (model) => {
       if(state[controlState](model)) {
         const action = controlStateToActions[controlState];
         action(model, present);
+        break;
       }
     }
   }

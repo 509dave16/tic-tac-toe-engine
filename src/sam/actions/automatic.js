@@ -1,6 +1,6 @@
 import intents from '../model/intents';
 import Firebase from 'firebase';
-import {generateSquareGrid, markGrid} from '../model/helpers/square-grid';
+import {generateSquareGrid, markGrid} from './helpers/square-grid';
 
 function createActions() {
   const firebase = new Firebase("https://tic-tac-toe-redux-sam.firebaseio.com");

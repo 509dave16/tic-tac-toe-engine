@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {createAssignmentReducers} from './helpers/reducer-factory';
+import {createAssignmentReducers} from './reducer-factory';
 import intents from './intents.js';
 import reducerDefaults from './reducer-defaults.js';
 
