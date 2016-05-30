@@ -15,5 +15,5 @@ after_success:
   - npm run semantic-release
   - npm run build
 branches:
-  except:
+  only:
     - master
