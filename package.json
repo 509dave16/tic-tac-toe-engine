@@ -1,6 +1,6 @@
 {
   "name": "tic-tac-toe-engine",
-  "version": "1.0.4-beta",
+  "version": "0.0.0-semantically-released",
   "description": "Business logic of a Tic Tac Toe game.",
   "main": "dist/index.js",
   "scripts": {
