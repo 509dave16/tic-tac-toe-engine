@@ -1,9 +1,11 @@
 import state from './state'
-import napActions from './actions/automatic.js';
+import createActions from './actions/automatic.js';
 
-const nap = (model) => {
+let controlStateToActions = undefined;
 
-  const controlStateToActions = {
+const init = (firebaseUrl) => {
+  const napActions = createActions(firebaseUrl);
+  controlStateToActions = {
     initialize: napActions.initializeGridAction,
     startLocalGame: napActions.startLocalGameAction,
     hostSession: napActions.hostSessionAction,
@@ -19,7 +21,12 @@ const nap = (model) => {
     onlineRestart: napActions.onlineRestartAction,
     finished: napActions.finishedAction
   };
+};
 
+const evaluate = (model) => {
+  if(controlStateToActions === undefined) {
+    throw 'Please call init before evaluate!';
+  }
   return present => {
     for (const controlState in controlStateToActions) {
       if(state[controlState](model)) {
@@ -31,4 +38,7 @@ const nap = (model) => {
   }
 };
 
-export default nap
+export default {
+  init,
+  evaluate
+}

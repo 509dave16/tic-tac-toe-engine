@@ -1,13 +1,14 @@
-import { createStore } from 'redux'
-import  reducers  from './reducers.js'
-import present from './present.js'
-import nap from '../nap.js'
+import { createStore } from 'redux';
+import  reducers  from './reducers.js';
+import present from './present.js';
+import nap from '../nap.js';
 
-const createModel = (enhancer) => {
+const createModel = (firebaseUrl, enhancer) => {
   const store = createStore(reducers, undefined, enhancer);
+  nap.init(firebaseUrl);
   const mergeStateToPresent = dataset => {
     present(dataset, store.getState())(store.dispatch);
-    nap(store.getState())(mergeStateToPresent);
+    nap.evaluate(store.getState())(mergeStateToPresent);
   };
 
   mergeStateToPresent({type:'FIRST_DISPATCH'});

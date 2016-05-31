@@ -2,8 +2,10 @@ import intents from '../model/intents';
 import Firebase from 'firebase';
 import {generateSquareGrid, markGrid} from './helpers/square-grid';
 
-function createActions() {
-  const firebase = new Firebase("https://tic-tac-toe-redux-sam.firebaseio.com");
+
+const switchTurn = turn => turn !== '' ? (turn === 'X' ? 'O' : 'X') : (Math.random() > 0.5 ? 'X' : 'O');
+const createActions = firebaseUrl => {
+  const firebase = new Firebase(firebaseUrl);
   let firebaseSession = undefined;
 
   const initializeGridAction = (model, present) => {
@@ -152,10 +154,7 @@ function createActions() {
     finishedAction,
     startLocalGameAction
   };
-}
+};
 
-function switchTurn(turn) {
-  return turn !== '' ? (turn === 'X' ? 'O' : 'X') : (Math.random() > 0.5 ? 'X' : 'O');
-}
 
-export default createActions();
+export default createActions;
