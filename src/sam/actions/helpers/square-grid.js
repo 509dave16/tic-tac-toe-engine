@@ -50,7 +50,8 @@ function generateSets(size) {
 }
 
 function checkSets(sets, size) {
-  for(const cellSet of sets) {
+  for(let index = 0; index < sets.length; index++) {
+    const cellSet = sets[index];
     if(cellSet.count === size) {
       return true;
     }
