@@ -19,7 +19,7 @@ import createEngine from 'tic-tac-toe-engine';
 //CommonJS
 const createEngine = require('tic-tac-toe-engine');
 
-const api = createEngine();//Can optionally pass a Redux Enhancer that will be used when creating the Redux Store
+const api = createEngine("<firebase url here>");//Can optionally pass a Redux Enhancer as the second argument which will be used when creating the Redux Store
 const { store, actions } = api;
 ```
 For an example of how the 'api' is used in an application, please take a look at this [repo](https://github.com/509dave16/sam-tic-tac-toe "SAM Tic Tac Toe")
@@ -29,50 +29,21 @@ For an example of how the 'api' is used in an application, please take a look at
 ## store
 A Redux Store. In the case of this package, it will represent the Model in the SAM pattern. It is highly recommended to use this in conjunction with React so that Components will automatically be re-rendered on changes to the Model.
 
-- grid: { cells: [], cellSets: [], sets: [], finished: false, winner: false, movesTaken: 0, initialized: false, size: 3}
-
-Summary: Represents all aspects of a Tic Tac Toe gameboard(a.k.a grid). 
-You need not concern yourself with cellSets and sets since these arrays are for computing if there is a winner or not. 
-cells and size will be the most important for rendering the GUI.
-cells is simply an array of strings which are either 'X', 'O', or '' which indicate if a player has marked the cell in the grid.
-- gameType: ''
-
-Summary: Should be either '', 'Local Game', 'Host Game', 'Join Game'
-Represents what Game Type was selected for the Tic Tac Toe game.
-- gameStatus: 'Please select a game mode!'
-
-Summary: A string that indicates what the player should do next or the current status of the game.
-- player: ''
-
-Summary: A string for an online cross browser game that state's whether the player is 'X' or 'O'.
-- session: ''
-
-Summary: A string for an online cross browser game that indicates what game session the player is in.
-- showJoinSessionForm: false
-
-Summary: A boolean for an online cross browser game that indicates if the JoinSessionForm should be displayed.
-- submittedSession: ''
-
-Summary: A string representing a submitted session that should not be ignored.
-- move: -1
-
-Summary: An integer representing a cell in the grid that was clicked. Should be ignored.
-- turn: ''
-
-Summary: A string indicating which player's turn it is. Should be ignored.
-- turnSwitch: false,
-
-Summary: A boolean indicating that the turn should be switched. Should be ignored.
-- quit: false
-
-Summary: A boolean indicating that the current game type should be exited. Should be ignored.
-- restart: false
-
-Summary: A boolean indicating that the current game type should be restarted. Should be ignored.
-- done: false
-
-Summary: A boolean indicating that the current game is finished.
-Useful for determining when to show the calls to action for quiting or restarting the game.
+|Ignore|Reducer|Default Value|Summary|
+|:---|:---|:---|:---|
+| |grid|{ cells: [], cellSets: [], sets: [], finished: false, winner: false, movesTaken: 0, initialized: false, size: 3}|Represents all aspects of a Tic Tac Toe gameboard(a.k.a grid). You need not concern yourself with 'cellSets' and 'sets', since these arrays are for computing if there is a winner or not. 'cells' and 'size' will be the most important for rendering the GUI. 'cells' is simply an array of strings which are either 'X', 'O', or '' which indicate if a player has marked the cell in the grid. 'size' indicates how big the square grid is(i.e. 3 means 3x3 which is 9 cells).|
+| |gameType|""(i.e. empty string)|Should be either '', 'Local Game', 'Host Game', 'Join Game'. Represents what Game Type was selected for the Tic Tac Toe game.|
+| |gameStatus|"Please select a game mode!"|A string that indicates what the player should do next or the current status of the game.|
+| |player|""(i.e. empty string)|A string for the 'Host Game' or 'Join Game' game types that indicates whether the player is 'X' or 'O'.|
+| |session|""(i.e. empty string)|A string for an online cross browser game that indicates what game session the player is in.|
+| |showJoinSessionForm|false|A boolean for an online cross browser game that indicates if the JoinSessionForm should be displayed.|
+|&#9989;|submittedSession|""(i.e. empty string)|A string representing a submitted session.|
+|&#9989;|move|-1|An integer representing a cell in the grid that was clicked.|
+|&#9989;|turn|""(i.e. empty string)|A string indicating which player's turn it is.|
+|&#9989;|turnSwitch|false|A boolean indicating that the turn should be switched.|
+|&#9989;|quit|false|A boolean indicating that the current game type should be exited.|
+|&#9989;|restart|false|A boolean indicating that the current game type should be restarted.|
+| |done|false|A boolean indicating that the current game is finished. Useful for determining when to show the calls to action for quiting or restarting the game.|
 
 ## actions
 These functions should be used as event handlers or called from within event handlers in order to trigger the Model(a.k.a Redux Store) mutations.
