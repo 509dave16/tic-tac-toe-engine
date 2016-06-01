@@ -22,7 +22,11 @@ const createEngine = require('tic-tac-toe-engine');
 const api = createEngine("<firebase url here>");//Can optionally pass a Redux Enhancer as the second argument which will be used when creating the Redux Store
 const { store, actions } = api;
 ```
-For an example of how the 'api' is used in an application, please take a look at this [repo](https://github.com/509dave16/sam-tic-tac-toe "SAM Tic Tac Toe")
+
+# Examples
+
+### [Web App](https://github.com/509dave16/sam-tic-tac-toe "SAM Tic Tac Toe")
+### [Mobile App](https://github.com/509dave16/tic-tac-toe-react-native "Tic Tac Toe React Native") (Note: Mobile App example is still very rough still)
 
 # API
 
