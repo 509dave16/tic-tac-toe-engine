@@ -20,9 +20,9 @@ var _nap2 = _interopRequireDefault(_nap);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var createModel = function createModel(firebaseConfig, enhancer) {
+var createModel = function createModel(firebaseUrl, enhancer) {
   var store = (0, _redux.createStore)(_reducers2.default, undefined, enhancer);
-  _nap2.default.init(firebaseConfig);
+  _nap2.default.init(firebaseUrl);
   var mergeStateToPresent = function mergeStateToPresent(dataset) {
     (0, _present2.default)(dataset, store.getState())(store.dispatch);
     _nap2.default.evaluate(store.getState())(mergeStateToPresent);

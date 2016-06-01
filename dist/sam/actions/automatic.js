@@ -19,9 +19,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var switchTurn = function switchTurn(turn) {
   return turn !== '' ? turn === 'X' ? 'O' : 'X' : Math.random() > 0.5 ? 'X' : 'O';
 };
-var createActions = function createActions(firebaseConfig) {
-  var firebase = _firebase2.default.initializeApp(firebaseConfig).database().ref();
-
+var createActions = function createActions(firebaseUrl) {
+  var firebase = new _firebase2.default(firebaseUrl);
   var firebaseSession = undefined;
 
   var initializeGridAction = function initializeGridAction(model, present) {
@@ -49,7 +48,7 @@ var createActions = function createActions(firebaseConfig) {
   var hostSessionAction = function hostSessionAction(model, present) {
     firebase.child('sessions').push({ status: 'Yayy!' }).then(function (firebaseRef) {
       firebaseSession = firebaseRef;
-      var session = firebaseSession.key;
+      var session = firebaseSession.key();
       setupFirebaseHandlers(session, present);
       present(_intents2.default.hostSession(session));
     });
@@ -146,7 +145,7 @@ var createActions = function createActions(firebaseConfig) {
     });
 
     firebase.child('sessions').on('child_removed', function (snapshot) {
-      if (snapshot.key === session) {
+      if (snapshot.key() === session) {
         present(_intents2.default.quit());
       }
     });

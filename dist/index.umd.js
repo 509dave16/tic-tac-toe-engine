@@ -70,8 +70,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var createEngine = function createEngine(firebaseConfig, reduxEnhancer) {
-	    var model = (0, _model2.default)(firebaseConfig, reduxEnhancer);
+	var createEngine = function createEngine(firebaseUrl, reduxEnhancer) {
+	    var model = (0, _model2.default)(firebaseUrl, reduxEnhancer);
 	    var actions = (0, _view2.default)(model.present);
 	    return {
 	        store: model.store,
@@ -107,9 +107,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var createModel = function createModel(firebaseConfig, enhancer) {
+	var createModel = function createModel(firebaseUrl, enhancer) {
 	  var store = (0, _redux.createStore)(_reducers2.default, undefined, enhancer);
-	  _nap2.default.init(firebaseConfig);
+	  _nap2.default.init(firebaseUrl);
 	  var mergeStateToPresent = function mergeStateToPresent(dataset) {
 	    (0, _present2.default)(dataset, store.getState())(store.dispatch);
 	    _nap2.default.evaluate(store.getState())(mergeStateToPresent);
@@ -2299,24 +2299,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var controlStateToActions = undefined;
 	
-	var init = function init(firebaseConfig) {
-	  var napActions = (0, _automatic2.default)(firebaseConfig);
-	  controlStateToActions = {
-	    initialize: napActions.initializeGridAction,
-	    startLocalGame: napActions.startLocalGameAction,
-	    hostSession: napActions.hostSessionAction,
-	    joinAsGuest: napActions.joinSessionAction,
-	    localTakeTurn: napActions.localMarkGridAction,
-	    onlineTakeTurn: napActions.onlineMarkGridAction,
-	    localTurnSwitch: napActions.localTurnSwitchAction,
-	    onlineTurnSwitch: napActions.onlineTurnSwitchAction,
-	    showJoinSessionForm: napActions.setShowJoinSessionFormAction,
-	    localQuit: napActions.localQuitAction,
-	    onlineQuit: napActions.onlineQuitAction,
-	    localRestart: napActions.localRestartAction,
-	    onlineRestart: napActions.onlineRestartAction,
-	    finished: napActions.finishedAction
-	  };
+	var init = function init(firebaseUrl) {
+	  var napActions = (0, _automatic2.default)(firebaseUrl);
+	  controlStateToActions = [{ predicate: _state2.default.initialize, action: napActions.initializeGridAction }, { predicate: _state2.default.startLocalGame, action: napActions.startLocalGameAction }, { predicate: _state2.default.hostSession, action: napActions.hostSessionAction }, { predicate: _state2.default.joinAsGuest, action: napActions.joinSessionAction }, { predicate: _state2.default.localTakeTurn, action: napActions.localMarkGridAction }, { predicate: _state2.default.onlineTakeTurn, action: napActions.onlineMarkGridAction }, { predicate: _state2.default.localTurnSwitch, action: napActions.localTurnSwitchAction }, { predicate: _state2.default.onlineTurnSwitch, action: napActions.onlineTurnSwitchAction }, { predicate: _state2.default.showJoinSessionForm, action: napActions.setShowJoinSessionFormAction }, { predicate: _state2.default.localQuit, action: napActions.localQuitAction }, { predicate: _state2.default.onlineQuit, action: napActions.onlineQuitAction }, { predicate: _state2.default.localRestart, action: napActions.localRestartAction }, { predicate: _state2.default.onlineRestart, action: napActions.onlineRestartAction }, { predicate: _state2.default.finished, action: napActions.finishedAction }];
 	};
 	
 	var evaluate = function evaluate(model) {
@@ -2324,13 +2309,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    throw 'Please call init before evaluate!';
 	  }
 	  return function (present) {
-	    for (var controlState in controlStateToActions) {
-	      if (_state2.default[controlState](model)) {
-	        var action = controlStateToActions[controlState];
-	        action(model, present);
+	
+	    var actionToCall = undefined;
+	    for (var index = 0; index < controlStateToActions.length; index++) {
+	      var _controlStateToAction = controlStateToActions[index];
+	      var predicate = _controlStateToAction.predicate;
+	      var action = _controlStateToAction.action;
+	
+	      if (predicate(model)) {
+	        actionToCall = action;
 	        break;
 	      }
 	    }
+	    if (actionToCall) actionToCall(model, present);
 	  };
 	};
 	
@@ -2424,9 +2415,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var switchTurn = function switchTurn(turn) {
 	  return turn !== '' ? turn === 'X' ? 'O' : 'X' : Math.random() > 0.5 ? 'X' : 'O';
 	};
-	var createActions = function createActions(firebaseConfig) {
-	  var firebase = _firebase2.default.initializeApp(firebaseConfig).database().ref();
-	
+	var createActions = function createActions(firebaseUrl) {
+	  var firebase = new _firebase2.default(firebaseUrl);
 	  var firebaseSession = undefined;
 	
 	  var initializeGridAction = function initializeGridAction(model, present) {
@@ -2454,7 +2444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var hostSessionAction = function hostSessionAction(model, present) {
 	    firebase.child('sessions').push({ status: 'Yayy!' }).then(function (firebaseRef) {
 	      firebaseSession = firebaseRef;
-	      var session = firebaseSession.key;
+	      var session = firebaseSession.key();
 	      setupFirebaseHandlers(session, present);
 	      present(_intents2.default.hostSession(session));
 	    });
@@ -2551,7 +2541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    firebase.child('sessions').on('child_removed', function (snapshot) {
-	      if (snapshot.key === session) {
+	      if (snapshot.key() === session) {
 	        present(_intents2.default.quit());
 	      }
 	    });

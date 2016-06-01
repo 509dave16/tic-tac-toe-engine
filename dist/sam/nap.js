@@ -16,24 +16,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var controlStateToActions = undefined;
 
-var init = function init(firebaseConfig) {
-  var napActions = (0, _automatic2.default)(firebaseConfig);
-  controlStateToActions = {
-    initialize: napActions.initializeGridAction,
-    startLocalGame: napActions.startLocalGameAction,
-    hostSession: napActions.hostSessionAction,
-    joinAsGuest: napActions.joinSessionAction,
-    localTakeTurn: napActions.localMarkGridAction,
-    onlineTakeTurn: napActions.onlineMarkGridAction,
-    localTurnSwitch: napActions.localTurnSwitchAction,
-    onlineTurnSwitch: napActions.onlineTurnSwitchAction,
-    showJoinSessionForm: napActions.setShowJoinSessionFormAction,
-    localQuit: napActions.localQuitAction,
-    onlineQuit: napActions.onlineQuitAction,
-    localRestart: napActions.localRestartAction,
-    onlineRestart: napActions.onlineRestartAction,
-    finished: napActions.finishedAction
-  };
+var init = function init(firebaseUrl) {
+  var napActions = (0, _automatic2.default)(firebaseUrl);
+  controlStateToActions = [{ predicate: _state2.default.initialize, action: napActions.initializeGridAction }, { predicate: _state2.default.startLocalGame, action: napActions.startLocalGameAction }, { predicate: _state2.default.hostSession, action: napActions.hostSessionAction }, { predicate: _state2.default.joinAsGuest, action: napActions.joinSessionAction }, { predicate: _state2.default.localTakeTurn, action: napActions.localMarkGridAction }, { predicate: _state2.default.onlineTakeTurn, action: napActions.onlineMarkGridAction }, { predicate: _state2.default.localTurnSwitch, action: napActions.localTurnSwitchAction }, { predicate: _state2.default.onlineTurnSwitch, action: napActions.onlineTurnSwitchAction }, { predicate: _state2.default.showJoinSessionForm, action: napActions.setShowJoinSessionFormAction }, { predicate: _state2.default.localQuit, action: napActions.localQuitAction }, { predicate: _state2.default.onlineQuit, action: napActions.onlineQuitAction }, { predicate: _state2.default.localRestart, action: napActions.localRestartAction }, { predicate: _state2.default.onlineRestart, action: napActions.onlineRestartAction }, { predicate: _state2.default.finished, action: napActions.finishedAction }];
 };
 
 var evaluate = function evaluate(model) {
@@ -41,13 +26,19 @@ var evaluate = function evaluate(model) {
     throw 'Please call init before evaluate!';
   }
   return function (present) {
-    for (var controlState in controlStateToActions) {
-      if (_state2.default[controlState](model)) {
-        var action = controlStateToActions[controlState];
-        action(model, present);
+
+    var actionToCall = undefined;
+    for (var index = 0; index < controlStateToActions.length; index++) {
+      var _controlStateToAction = controlStateToActions[index];
+      var predicate = _controlStateToAction.predicate;
+      var action = _controlStateToAction.action;
+
+      if (predicate(model)) {
+        actionToCall = action;
         break;
       }
     }
+    if (actionToCall) actionToCall(model, present);
   };
 };
 
