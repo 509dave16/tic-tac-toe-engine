@@ -3,8 +3,8 @@ import createActions from './actions/automatic.js';
 
 let controlStateToActions = undefined;
 
-const init = (firebaseUrl) => {
-  const napActions = createActions(firebaseUrl);
+const init = (firebaseConfig) => {
+  const napActions = createActions(firebaseConfig);
   controlStateToActions = {
     initialize: napActions.initializeGridAction,
     startLocalGame: napActions.startLocalGameAction,

@@ -4,8 +4,9 @@ import {generateSquareGrid, markGrid} from './helpers/square-grid';
 
 
 const switchTurn = turn => turn !== '' ? (turn === 'X' ? 'O' : 'X') : (Math.random() > 0.5 ? 'X' : 'O');
-const createActions = firebaseUrl => {
-  const firebase = new Firebase(firebaseUrl);
+const createActions = firebaseConfig => {
+  const firebase = Firebase.initializeApp(firebaseConfig).database().ref();
+
   let firebaseSession = undefined;
 
   const initializeGridAction = (model, present) => {
@@ -31,7 +32,7 @@ const createActions = firebaseUrl => {
     firebase.child('sessions').push({status: 'Yayy!'})
       .then((firebaseRef) => {
         firebaseSession = firebaseRef;
-        const session = firebaseSession.key();
+        const session = firebaseSession.key;
         setupFirebaseHandlers(session,present);
         present(intents.hostSession(session));
       });
@@ -126,7 +127,7 @@ const createActions = firebaseUrl => {
     });
 
     firebase.child('sessions').on('child_removed', (snapshot) => {
-      if(snapshot.key() === session) {
+      if(snapshot.key === session) {
         present(intents.quit());
       }
     });
