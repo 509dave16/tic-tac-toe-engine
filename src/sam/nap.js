@@ -5,36 +5,39 @@ let controlStateToActions = undefined;
 
 const init = (firebaseUrl) => {
   const napActions = createActions(firebaseUrl);
-  controlStateToActions = {
-    initialize: napActions.initializeGridAction,
-    startLocalGame: napActions.startLocalGameAction,
-    hostSession: napActions.hostSessionAction,
-    joinAsGuest: napActions.joinSessionAction,
-    localTakeTurn: napActions.localMarkGridAction,
-    onlineTakeTurn: napActions.onlineMarkGridAction,
-    localTurnSwitch: napActions.localTurnSwitchAction,
-    onlineTurnSwitch: napActions.onlineTurnSwitchAction,
-    showJoinSessionForm: napActions.setShowJoinSessionFormAction,
-    localQuit: napActions.localQuitAction,
-    onlineQuit: napActions.onlineQuitAction,
-    localRestart: napActions.localRestartAction,
-    onlineRestart: napActions.onlineRestartAction,
-    finished: napActions.finishedAction
-  };
+  controlStateToActions = [
+    { predicate: state.initialize, action: napActions.initializeGridAction},
+    { predicate: state.startLocalGame, action: napActions.startLocalGameAction},
+    { predicate: state.hostSession, action: napActions.hostSessionAction},
+    { predicate: state.joinAsGuest, action: napActions.joinSessionAction},
+    { predicate: state.localTakeTurn, action: napActions.localMarkGridAction},
+    { predicate: state.onlineTakeTurn, action: napActions.onlineMarkGridAction},
+    { predicate: state.localTurnSwitch, action: napActions.localTurnSwitchAction},
+    { predicate: state.onlineTurnSwitch, action: napActions.onlineTurnSwitchAction},
+    { predicate: state.showJoinSessionForm, action: napActions.setShowJoinSessionFormAction},
+    { predicate: state.localQuit, action: napActions.localQuitAction},
+    { predicate: state.onlineQuit, action: napActions.onlineQuitAction},
+    { predicate: state.localRestart, action: napActions.localRestartAction},
+    { predicate: state.onlineRestart, action: napActions.onlineRestartAction},
+    { predicate: state.finished, action: napActions.finishedAction}
+  ];
 };
 
 const evaluate = (model) => {
-  if(controlStateToActions === undefined) {
+  if (controlStateToActions === undefined) {
     throw 'Please call init before evaluate!';
   }
   return present => {
-    for (const controlState in controlStateToActions) {
-      if(state[controlState](model)) {
-        const action = controlStateToActions[controlState];
-        action(model, present);
+
+    let actionToCall = undefined;
+    for (let index = 0; index < controlStateToActions.length; index++) {
+      const { predicate, action } = controlStateToActions[index];
+      if (predicate(model)) {
+        actionToCall = action;
         break;
       }
     }
+    if (actionToCall) actionToCall(model, present);
   }
 };
 
