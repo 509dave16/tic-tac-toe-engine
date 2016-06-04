@@ -9,7 +9,8 @@ const present = (dataset, model) => {
     if(dataset.type === intentTypes.INITIATE_MARK_GRID &&
       ((model.gameType !== 'Local Game' && model.player !== model.turn)
       || model.grid.cells[dataset.payload.move] !== ''
-      || model.gameType === "")
+      || model.gameType === ''
+      || model.turn === '')
       && !model.grid.finished
     ) { return;}
 
